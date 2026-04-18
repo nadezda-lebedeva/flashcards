@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finnish Flashcards</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f7f5f0;
+    --ink: #1a1814;
+    --ink-soft: #6b6760;
+    --ink-muted: #b0ada8;
+    --card-bg: #ffffff;
+    --border: #e4e1db;
+    --accent-fi: #1a5c3a;
+    --accent-en: #1a3d5c;
+    --accent-swipe: #3d1a5c;
+    --accent-fi-light: #eaf3ee;
+    --accent-en-light: #eaf0f3;
+    --accent-swipe-light: #f0eaf3;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* subtle grid texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.35;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page { position: relative; z-index: 1; max-width: 680px; margin: 0 auto; padding: 64px 24px 80px; }
+
+  /* HEADER */
+  .header { margin-bottom: 64px; }
+  .flag-row { display: flex; gap: 6px; margin-bottom: 20px; font-size: 28px; animation: fadeUp 0.6s ease both; }
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(42px, 8vw, 68px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+  h1 em {
+    font-style: italic;
+    color: var(--ink-soft);
+  }
+  .tagline {
+    margin-top: 16px;
+    font-size: 16px;
+    color: var(--ink-soft);
+    font-weight: 300;
+    line-height: 1.6;
+    max-width: 440px;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  /* CARDS GRID */
+  .cards { display: flex; flex-direction: column; gap: 16px; }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px 32px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    animation: fadeUp 0.6s ease both;
+  }
+  .card:nth-child(1) { animation-delay: 0.25s; }
+  .card:nth-child(2) { animation-delay: 0.35s; }
+  .card:nth-child(3) { animation-delay: 0.45s; }
+
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+  }
+  .card:hover.fi { border-color: var(--accent-fi); }
+  .card:hover.en { border-color: var(--accent-en); }
+  .card:hover.sw { border-color: var(--accent-swipe); }
+
+  .card-left { flex: 1; }
+
+  .card-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+  .fi .card-badge { background: var(--accent-fi-light); color: var(--accent-fi); }
+  .en .card-badge { background: var(--accent-en-light); color: var(--accent-en); }
+  .sw .card-badge { background: var(--accent-swipe-light); color: var(--accent-swipe); }
+
+  .card-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 26px;
+    color: var(--ink);
+    line-height: 1.15;
+    margin-bottom: 6px;
+  }
+  .card-desc {
+    font-size: 14px;
+    color: var(--ink-soft);
+    font-weight: 300;
+    line-height: 1.5;
+  }
+
+  .card-arrow {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 18px;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .card:hover .card-arrow { background: var(--ink); border-color: var(--ink); filter: invert(1); }
+
+  /* DIVIDER */
+  .section-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 20px;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  /* FOOTER */
+  .footer {
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    animation: fadeUp 0.6s 0.5s ease both;
+  }
+  .footer-note {
+    font-size: 13px;
+    color: var(--ink-muted);
+    font-weight: 300;
+  }
+  .footer-tag {
+    font-size: 12px;
+    background: #f0ede8;
+    color: var(--ink-soft);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 400;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 480px) {
+    .page { padding: 48px 20px 60px; }
+    .card { padding: 22px 20px; }
+    .card-title { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="header">
+    <div class="flag-row">🇫🇮</div>
+    <h1>Finnish<br><em>Flashcards</em></h1>
+    <p class="tagline">A personal vocabulary app for learning Finnish — powered by AI. Pick your language pair and start swiping.</p>
+  </header>
+
+  <p class="section-label">Choose your version</p>
+
+  <div class="cards">
+
+    <a href="fi-ru.html" class="card fi">
+      <div class="card-left">
+        <div class="card-badge">🇫🇮 Finnish &nbsp;·&nbsp; 🇷🇺 Russian</div>
+        <div class="card-title">Finnish – Russian</div>
+        <div class="card-desc">Full-featured: add words, bulk import, AI extraction from text, archive.</div>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+
+    <a href="fi-en.html" class="card en">
+      <div class="card-left">
+        <div class="card-badge">🇫🇮 Finnish &nbsp;·&nbsp; 🇬🇧 English</div>
+        <div class="card-title">Finnish – English</div>
+        <div class="card-desc">Full-featured: add words, bulk import, AI extraction from text, archive.</div>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+
+    <a href="fi-ru-swipe.html" class="card sw">
+      <div class="card-left">
+        <div class="card-badge">🇫🇮 Finnish &nbsp;·&nbsp; 🇷🇺 Russian &nbsp;·&nbsp; Swipe</div>
+        <div class="card-title">Finnish – Russian <em style="font-style:italic;font-size:20px;color:#9b72bf;">Swipe</em></div>
+        <div class="card-desc">Minimal mode — no buttons, just swipe. Shares words with the full Russian version.</div>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+
+  </div>
+
+  <footer class="footer">
+    <span class="footer-note">Built with Claude AI · 2026</span>
+    <span class="footer-tag">AI-assisted app</span>
+  </footer>
+
+</div>
+</body>
+</html>
