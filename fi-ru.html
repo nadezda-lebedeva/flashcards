@@ -477,6 +477,8 @@ async function extractWithAI() {
       })
     });
     const data = await response.json();
+    if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
+    if (!data.content) throw new Error('Нет ответа от API: ' + JSON.stringify(data));
     const txt = data.content.map(i => i.text || '').join('');
     aiCards = JSON.parse(txt.replace(/```json|```/g, '').trim()).map(c => ({...c, hint: '', archived: false}));
     res.innerHTML = '';
