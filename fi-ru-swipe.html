@@ -643,7 +643,7 @@ async function extractWithAI() {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true','anthropic-version':'2023-06-01','x-api-key':apiKey},
-      body: JSON.stringify({model:'claude-sonnet-4-20250514', max_tokens:1000,
+      body: JSON.stringify({model:'claude-sonnet-4-6', max_tokens:1000,
         messages:[{role:'user', content:`Из этого финского текста извлеки ${count} наиболее полезных слов. Переведи на русский. Ответь ТОЛЬКО JSON массивом без пояснений:\n[{"fi":"...","ru":"..."},...]\n\nТекст:\n${text}`}]})
     });
     const data = await response.json();
@@ -695,7 +695,7 @@ async function extractAllWithAI() {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true','anthropic-version':'2023-06-01','x-api-key':apiKey},
-      body: JSON.stringify({model:'claude-sonnet-4-20250514', max_tokens:2000,
+      body: JSON.stringify({model:'claude-sonnet-4-6', max_tokens:2000,
         messages:[{role:'user', content:`Переведи ВСЕ финские слова из этого текста на русский. Не пропускай ни одного слова, не выбирай только важные — переводи всё подряд. Если встречаются случайные символы или явно не финские слова — пропусти их. Ответь ТОЛЬКО JSON массивом без пояснений и без markdown:
 [{"fi":"слово","ru":"перевод"},...]
 
